@@ -1,16 +1,44 @@
-import Hero from "@/components/hero";
-import ConnectSupabaseSteps from "@/components/tutorial/connect-supabase-steps";
-import SignUpUserSteps from "@/components/tutorial/sign-up-user-steps";
-import { hasEnvVars } from "@/utils/supabase/check-env-vars";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function Home() {
+  const supabase = await createClient();
+
+  const { data: recordedBooks } = await supabase
+    .from('recorded_books')
+    .select('*')
+    .order('created_at', { ascending: false });
+
   return (
-    <>
-      <Hero />
-      <main className="flex-1 flex flex-col gap-6 px-4">
-        <h2 className="font-medium text-xl mb-4">Next steps</h2>
-        {hasEnvVars ? <SignUpUserSteps /> : <ConnectSupabaseSteps />}
+    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white">
+      <main className="container mx-auto px-4 py-16">
+        {/* 読書記録が0件の場合LPを表示 */}
+        {!recordedBooks || recordedBooks.length === 0 ? (
+          <>
+            <h1 className="text-4xl font-bold text-center mb-8">Reading Recorder</h1>
+            <p className="text-xl text-center mb-12">簡単に本を検索し、あなたの読書の旅を記録しましょう。</p>
+            <div className="space-y-8">
+              <section className="text-center">
+                <h2 className="text-2xl font-semibold mb-4">機能</h2>
+                <ul className="list-disc list-inside text-left max-w-md mx-auto">
+                  <li>Google Books APIを使用した本の検索</li>
+                  <li>詳細な本の情報の表示</li>
+                  <li>読んだ本の記録</li>
+                  <li>読書の進捗管理</li>
+                </ul>
+              </section>
+              <section className="text-center">
+                <h2 className="text-2xl font-semibold mb-4">始めましょう</h2>
+                {/* <SearchButton /> */}
+              </section>
+            </div>
+          </>
+        ) : (
+          <>
+            <h1 className="text-4xl font-bold text-center mb-8">あなたの読書記録</h1>
+            {/* <RecordBooks books={recordedBooks} /> */}
+          </>
+        )}
       </main>
-    </>
+    </div>
   );
 }
