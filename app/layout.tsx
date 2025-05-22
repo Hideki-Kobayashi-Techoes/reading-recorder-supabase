@@ -2,6 +2,7 @@ import HeaderAuth from "@/components/header-auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import { SearchBox } from "@/components/SearchBox";
 import Link from "next/link";
 import "./globals.css";
 
@@ -40,7 +41,10 @@ export default function RootLayout({
                 <div className="flex gap-5 items-center font-semibold">
                   <Link href={"/"}>Reading Recorder</Link>
                 </div>
-                <HeaderAuth />
+                <div className="flex gap-5 items-center">
+                  <SearchBox />
+                  <HeaderAuth />
+                </div>
               </div>
             </nav>
             
@@ -55,7 +59,7 @@ export default function RootLayout({
                   href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
                   target="_blank"
                   className="font-bold hover:underline"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                 >
                   Supabase
                 </a>
