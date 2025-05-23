@@ -166,3 +166,57 @@ export async function searchBooks(query: string): Promise<SearchResult[]> {
     return [];
   }
 }
+
+// 本の詳細を取得する関数
+export async function getBookDetails(id: string): Promise<SearchResult> {
+  try {
+    const response = await fetch(
+      `https://www.googleapis.com/books/v1/volumes/${id}`,
+      { next: { revalidate: 3600 } }
+    );
+    
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+    
+    const item = await response.json();
+    
+    return {
+      id: item.id,
+      title: item.volumeInfo.title,
+      authors: item.volumeInfo.authors || ["-"],
+      thumbnail: item.volumeInfo.imageLinks?.thumbnail || "/placeholder.svg",
+      price: item.saleInfo?.listPrice?.amount || "-",
+      publishedDate: item.volumeInfo.publishedDate || "-",
+      publisher: item.volumeInfo.publisher || "-",
+    };
+  } catch (error) {
+    console.error("本の詳細取得中にエラーが発生しました:", error);
+    throw new Error("本の詳細の取得に失敗しました");
+  }
+}
+
+// 読書記録を保存する関数
+export async function saveBookRecord(formData: FormData) {
+  try {
+    const bookId = formData.get("bookId") as string;
+    const status = formData.get("status") as string;
+    const rating = formData.get("rating") as string;
+    const review = formData.get("review") as string;
+    
+    if (!bookId) {
+      throw new Error("本のIDが指定されていません");
+    }
+    
+    // 本の詳細を取得
+    const book = await getBookDetails(bookId);
+    
+    // ここではSupabaseに保存する代わりにレスポンスを返す
+    // 実際の実装では、ここでSupabaseにデータを保存する処理を行う
+    
+    return { success: true, message: "読書記録を保存しました" };
+  } catch (error) {
+    console.error("読書記録の保存中にエラーが発生しました:", error);
+    return { success: false, message: "読書記録の保存に失敗しました" };
+  }
+}
