@@ -287,3 +287,65 @@ export async function deleteBookRecord(formData: FormData) {
     return { success: false, message: "読書記録の削除に失敗しました" };
   }
 }
+
+// 読書記録の一覧を取得する関数
+export async function getBookRecords(): Promise<RecordedBook[]> {
+  try {
+    // ここではSupabaseからデータを取得する代わりにダミーデータを返す
+    // 実際の実装では、ここでSupabaseからデータを取得する処理を行う
+    const supabase = await createClient();
+    
+    // ユーザー情報を取得
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      throw new Error("認証されていません");
+    }
+    
+    // ダミーデータの例
+    return [
+      {
+        id: "1",
+        title: "リーダブルコード",
+        authors: ["Dustin Boswell", "Trevor Foucher"],
+        thumbnail: "https://books.google.com/books/content?id=Wx1dLwEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+        price: "2600",
+        publisher: "オライリージャパン",
+        publishedDate: "2012-06-23",
+        status: "読了",
+        rating: "5",
+        review: "プログラミングの基本的な考え方が学べる良書です。",
+        createdAt: "2023-01-15T09:00:00.000Z"
+      },
+      {
+        id: "2",
+        title: "達人プログラマー",
+        authors: ["Andrew Hunt", "David Thomas"],
+        thumbnail: "https://books.google.com/books/content?id=7EuEoQEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+        price: "3200",
+        publisher: "オーム社",
+        publishedDate: "2020-11-17",
+        status: "読書中",
+        rating: "4",
+        review: "プログラマーとしての姿勢や考え方について深く考えさせられます。",
+        createdAt: "2023-02-20T15:30:00.000Z"
+      },
+      {
+        id: "3",
+        title: "プログラミング言語Go",
+        authors: ["Alan A.A. Donovan", "Brian W. Kernighan"],
+        thumbnail: "https://books.google.com/books/content?id=3JWQswEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+        price: "3600",
+        publisher: "丸善出版",
+        publishedDate: "2016-06-20",
+        status: "未読",
+        rating: "3",
+        review: "Go言語の基本を学ぶために購入しました。まだ読み始めていません。",
+        createdAt: "2023-03-10T18:45:00.000Z"
+      }
+    ];
+  } catch (error) {
+    console.error("読書記録の一覧取得中にエラーが発生しました:", error);
+    return [];
+  }
+}
