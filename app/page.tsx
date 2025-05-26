@@ -1,7 +1,5 @@
 import { getBookRecords } from "./actions";
 import BookList from "@/components/BookList";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 export default async function Home() {
   try {
@@ -26,21 +24,12 @@ export default async function Home() {
                     <li>読書の進捗管理</li>
                   </ul>
                 </section>
-                <section className="text-center">
-                  <h2 className="text-2xl font-semibold mb-4">始めましょう</h2>
-                  <Link href="/search">
-                    <Button size="lg">本を検索する</Button>
-                  </Link>
-                </section>
               </div>
             </>
           ) : (
             <>
               <div className="flex justify-between items-center mb-8">
                 <h1 className="text-3xl font-bold">あなたの読書記録</h1>
-                <Link href="/search">
-                  <Button>新しい本を追加</Button>
-                </Link>
               </div>
               
               {/* 読書状態ごとの集計 */}
@@ -74,9 +63,6 @@ export default async function Home() {
           <div className="text-red-500 text-center">
             <h1 className="text-2xl font-bold mb-4">エラーが発生しました</h1>
             <p>読書記録の取得中にエラーが発生しました。再度お試しください。</p>
-            <Link href="/search" className="mt-4 inline-block">
-              <Button variant="outline" className="mt-4">本を検索する</Button>
-            </Link>
           </div>
         </main>
       </div>
