@@ -1,79 +1,37 @@
-"use client";
+import { getRecordById } from "@/app/actions";
+import BookFormEditClient from "@/components/BookFormEditClient";
 
-import { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
-import BookForm from "@/components/BookForm";
-
-const getBookDetails = async (id: string) => {
-  const records = JSON.parse(localStorage.getItem("bookRecords") || "[]");
-  const record = records.find((record: RecordedBook) => record.id === id);
-  return record;
-};
-
-export default function EditPage() {
-  const { id } = useParams();
-  const router = useRouter();
-  const [book, setBook] = useState<RecordedBook | null>(null);
-  const [status, setStatus] = useState("");
-  const [rating, setRating] = useState("");
-  const [review, setReview] = useState("");
-
-  useEffect(() => {
-    getBookDetails(id as string).then((bookDetails) => {
-      setBook(bookDetails);
-      setStatus(bookDetails.status);
-      setRating(bookDetails.rating);
-      setReview(bookDetails.review);
-    });
-  }, [id]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const records = JSON.parse(localStorage.getItem("bookRecords") || "[]");
-    const recordIndex = records.findIndex(
-      (record: RecordedBook) => record.id === id
-    );
-
-    if (recordIndex !== -1) {
-      records[recordIndex] = {
-        ...records[recordIndex],
-        status,
-        rating,
-        review,
-        createdAt: new Date().toISOString(),
-      };
-
-      localStorage.setItem("bookRecords", JSON.stringify(records));
-      router.push("/");
-    }
-  };
-
-  const handleDelete = () => {
-    if (confirm("本当に削除してもよろしいですか？")) {
-      const records = JSON.parse(localStorage.getItem("bookRecords") || "[]");
-      const filteredRecords = records.filter(
-        (record: RecordedBook) => record.id !== id
+// 編集ページ
+export default async function EditPage({
+  params
+}: {
+  params: { id: string }
+}) {
+  const recordId = params.id;
+  
+  try {
+    // 読書記録を取得
+    const book = await getRecordById(recordId);
+    
+    if (!book) {
+      return (
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-red-500">記録が見つかりませんでした</div>
+        </div>
       );
-      localStorage.setItem("bookRecords", JSON.stringify(filteredRecords));
-      router.push("/");
     }
-  };
-
-  if (!book) return <div>読み込み中...</div>;
-
-  return (
-    <BookForm
-      book={book}
-      status={status}
-      rating={rating}
-      review={review}
-      onStatusChange={setStatus}
-      onRatingChange={setRating}
-      onReviewChange={(e) => setReview(e.target.value)}
-      onSubmit={handleSubmit}
-      onDelete={handleDelete}
-      pageTitle="読書記録の編集"
-      submitButtonText="更新"
-    />
-  );
+    
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-8">読書記録の編集</h1>
+        <BookFormEditClient book={book} recordId={recordId} />
+      </div>
+    );
+  } catch (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-red-500">読書記録の取得に失敗しました</div>
+      </div>
+    );
+  }
 }

@@ -220,3 +220,70 @@ export async function saveBookRecord(formData: FormData) {
     return { success: false, message: "読書記録の保存に失敗しました" };
   }
 }
+
+// 読書記録を取得する関数
+export async function getRecordById(id: string): Promise<RecordedBook | null> {
+  try {
+    // ここではSupabaseからデータを取得する代わりにダミーデータを返す
+    // 実際の実装では、ここでSupabaseからデータを取得する処理を行う
+    
+    // ダミーデータの例
+    return {
+      id,
+      title: "テストタイトル",
+      authors: ["テスト著者"],
+      thumbnail: "/placeholder.svg",
+      price: "1500",
+      publisher: "テスト出版社",
+      publishedDate: "2023-01-01",
+      status: "読了",
+      rating: "5",
+      review: "とても良い本でした。",
+      createdAt: new Date().toISOString()
+    };
+  } catch (error) {
+    console.error("読書記録の取得中にエラーが発生しました:", error);
+    return null;
+  }
+}
+
+// 読書記録を更新する関数
+export async function updateBookRecord(formData: FormData) {
+  try {
+    const recordId = formData.get("recordId") as string;
+    const status = formData.get("status") as string;
+    const rating = formData.get("rating") as string;
+    const review = formData.get("review") as string;
+    
+    if (!recordId) {
+      throw new Error("記録IDが指定されていません");
+    }
+    
+    // ここではSupabaseに更新する代わりにレスポンスを返す
+    // 実際の実装では、ここでSupabaseのデータを更新する処理を行う
+    
+    return { success: true, message: "読書記録を更新しました" };
+  } catch (error) {
+    console.error("読書記録の更新中にエラーが発生しました:", error);
+    return { success: false, message: "読書記録の更新に失敗しました" };
+  }
+}
+
+// 読書記録を削除する関数
+export async function deleteBookRecord(formData: FormData) {
+  try {
+    const recordId = formData.get("recordId") as string;
+    
+    if (!recordId) {
+      throw new Error("記録IDが指定されていません");
+    }
+    
+    // ここではSupabaseから削除する代わりにレスポンスを返す
+    // 実際の実装では、ここでSupabaseのデータを削除する処理を行う
+    
+    return { success: true, message: "読書記録を削除しました" };
+  } catch (error) {
+    console.error("読書記録の削除中にエラーが発生しました:", error);
+    return { success: false, message: "読書記録の削除に失敗しました" };
+  }
+}
