@@ -7,7 +7,8 @@ export default async function EditPage({
 }: {
   params: { id: string }
 }) {
-  const recordId = params.id;
+  const paramsData = await params;
+  const recordId = paramsData.id;
   
   try {
     // 読書記録を取得

@@ -7,7 +7,8 @@ export default async function RecordPage({
 }: {
   searchParams: { id?: string };
 }) {
-  const bookId = searchParams.id;
+  const paramsData = await searchParams;
+  const bookId = paramsData.id;
   
   // 本のIDがない場合はエラー表示
   if (!bookId) {

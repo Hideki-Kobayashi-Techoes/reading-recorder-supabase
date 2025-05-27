@@ -7,7 +7,8 @@ export default async function SearchPage({
 }: {
   searchParams: { q?: string };
 }) {
-  const query = searchParams.q || "";
+  const paramsData = await searchParams;
+  const query = paramsData.q || "";
   const books = await searchBooks(query);
   
   return (
