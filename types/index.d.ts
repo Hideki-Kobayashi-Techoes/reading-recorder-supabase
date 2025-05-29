@@ -21,21 +21,3 @@ type SearchResult = {
   publishedDate: string;
   publisher: string;
 };
-
-type GoogleBookItem = {
-  id: string;
-  volumeInfo: {
-    title: string;
-    authors?: string[];
-    imageLinks?: {
-      thumbnail?: string;
-    };
-    publishedDate?: string;
-    publisher?: string;
-  };
-  saleInfo: {
-    listPrice: {
-      amount?: string;
-    };
-  };
-};
