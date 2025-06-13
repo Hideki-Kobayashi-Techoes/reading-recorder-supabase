@@ -1,4 +1,4 @@
-import { signUpAction } from "@/app/auth";
+import { signUpAction } from "@/app/lib/auth-actions";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";

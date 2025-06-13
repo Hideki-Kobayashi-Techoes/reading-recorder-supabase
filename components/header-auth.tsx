@@ -1,4 +1,4 @@
-import { signOutAction } from "@/app/auth";
+import { signOutAction } from "@/app/lib/auth-actions";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/server";
@@ -44,7 +44,11 @@ export default async function AuthButton() {
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <form action={signOutAction} className="w-full">
-            <Button type="submit" variant="ghost" className="w-full justify-start p-0 h-auto font-normal">
+            <Button
+              type="submit"
+              variant="ghost"
+              className="w-full justify-start p-0 h-auto font-normal"
+            >
               ログアウト
             </Button>
           </form>
