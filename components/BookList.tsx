@@ -1,10 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 interface BookListProps {
-  books: RecordedBook[];
+  books: BookRecord[];
 }
 
 export default function BookList({ books }: BookListProps) {
@@ -31,10 +37,12 @@ export default function BookList({ books }: BookListProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {books.map((book) => (
-        <Link href={`/edit/${book.id}`} key={book.id}>
+        <Link href={`/record?id=${book.google_book_id}`} key={book.id}>
           <Card className="h-full hover:shadow-lg transition-shadow duration-300">
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg line-clamp-2">{book.title}</CardTitle>
+              <CardTitle className="text-lg line-clamp-2">
+                {book.title}
+              </CardTitle>
               <p className="text-sm text-gray-600 line-clamp-1">
                 {book.authors.join(", ")}
               </p>
@@ -50,14 +58,22 @@ export default function BookList({ books }: BookListProps) {
                 />
               </div>
               <div className="flex-grow">
-                <p className="text-sm mb-1 line-clamp-1">出版社: {book.publisher}</p>
-                <p className="text-sm mb-1">発行日: {book.publishedDate}</p>
-                <Badge className={getStatusColor(book.status)}>{book.status}</Badge>
-                <p className="text-sm mt-2">{renderRating(book.rating)}</p>
+                <p className="text-sm mb-1 line-clamp-1">
+                  出版社: {book.publisher}
+                </p>
+                <p className="text-sm mb-1">発行日: {book.published_date}</p>
+                <Badge className={getStatusColor(book.status)}>
+                  {book.status}
+                </Badge>
+                <p className="text-sm mt-2">
+                  {renderRating(book.rating.toString())}
+                </p>
               </div>
             </CardContent>
             <CardFooter className="pt-0">
-              <p className="text-sm text-gray-700 line-clamp-2">{book.review}</p>
+              <p className="text-sm text-gray-700 line-clamp-2">
+                {book.review}
+              </p>
             </CardFooter>
           </Card>
         </Link>

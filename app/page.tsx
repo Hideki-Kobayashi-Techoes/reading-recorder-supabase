@@ -1,32 +1,24 @@
-import { getBookRecords } from "./actions";
+import { getBookRecords } from "@/app/lib/records";
+import { getCurrentUser } from "@/app/lib/auth";
 import BookList from "@/components/BookList";
+import WelcomePage from "@/components/WelcomePage";
 
 export default async function Home() {
+  // 認証チェック
+  const user = await getCurrentUser();
+  
+  // ログインしていない場合はウェルカムページを表示
+  if (!user) {
+    return <WelcomePage />;
+  }
+  
   try {
     // サーバーアクションを使用して読書記録を取得
-    const books = await getBookRecords();
+    const bookRecords = await getBookRecords();
     
     // 読書記録が0件の場合
-    if (books.length === 0) {
-      return (
-        <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white">
-          <main className="container mx-auto px-4 py-16">
-            <h1 className="text-4xl font-bold text-center mb-8">Reading Recorder</h1>
-            <p className="text-xl text-center mb-12">簡単に本を検索し、あなたの読書の旅を記録しましょう。</p>
-            <div className="space-y-8">
-              <section className="text-center">
-                <h2 className="text-2xl font-semibold mb-4">機能</h2>
-                <ul className="list-disc list-inside text-left max-w-md mx-auto">
-                  <li>Google Books APIを使用した本の検索</li>
-                  <li>詳細な本の情報の表示</li>
-                  <li>読んだ本の記録</li>
-                  <li>読書の進捗管理</li>
-                </ul>
-              </section>
-            </div>
-          </main>
-        </div>
-      );
+    if (bookRecords.length === 0) {
+      return <WelcomePage />;
     }
     
     // 読書記録がある場合
@@ -41,20 +33,20 @@ export default async function Home() {
           <div className="grid grid-cols-3 gap-4 mb-8">
             <div className="bg-white p-4 rounded-lg shadow text-center">
               <p className="text-lg font-semibold">未読</p>
-              <p className="text-2xl">{books.filter(book => book.status === "未読").length}</p>
+              <p className="text-2xl">{bookRecords.filter(bookRecord => bookRecord.status === "未読").length}</p>
             </div>
             <div className="bg-white p-4 rounded-lg shadow text-center">
               <p className="text-lg font-semibold">読書中</p>
-              <p className="text-2xl">{books.filter(book => book.status === "読書中").length}</p>
+              <p className="text-2xl">{bookRecords.filter(bookRecord => bookRecord.status === "読書中").length}</p>
             </div>
             <div className="bg-white p-4 rounded-lg shadow text-center">
               <p className="text-lg font-semibold">読了</p>
-              <p className="text-2xl">{books.filter(book => book.status === "読了").length}</p>
+              <p className="text-2xl">{bookRecords.filter(bookRecord => bookRecord.status === "読了").length}</p>
             </div>
           </div>
           
           {/* 読書記録一覧 */}
-          <BookList books={books} />
+          <BookList books={bookRecords} />
         </main>
       </div>
     );
@@ -63,9 +55,9 @@ export default async function Home() {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white">
         <main className="container mx-auto px-4 py-16">
-          <div className="text-red-500 text-center">
-            <h1 className="text-2xl font-bold mb-4">エラーが発生しました</h1>
-            <p>読書記録の取得中にエラーが発生しました。再度お試しください。</p>
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong className="font-bold">エラー: </strong>
+            <span className="block sm:inline">読書記録の取得中にエラーが発生しました。再度お試しください。</span>
           </div>
         </main>
       </div>

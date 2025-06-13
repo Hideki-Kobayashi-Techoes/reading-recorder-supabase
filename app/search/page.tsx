@@ -1,12 +1,14 @@
 import SearchResults from "@/components/SearchResults";
-import { searchBooks } from "@/app/actions";
+import { searchBooks } from "@/app/lib/google_books";
+
+interface SearchPageProps {
+  searchParams: {
+    q?: string;
+  };
+}
 
 // メインの検索ページ
-export default async function SearchPage({
-  searchParams,
-}: {
-  searchParams: { q?: string };
-}) {
+export default async function SearchPage({ searchParams }: SearchPageProps) {
   const paramsData = await searchParams;
   const query = paramsData.q || "";
   
@@ -35,7 +37,10 @@ export default async function SearchPage({
   } catch (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-red-500">検索処理中にエラーが発生しました</div>
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <strong className="font-bold">エラー: </strong>
+          <span className="block sm:inline">検索処理中にエラーが発生しました</span>
+        </div>
       </div>
     );
   }

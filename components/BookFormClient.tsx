@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { saveBookRecord } from "@/app/actions";
+import { saveBookRecord } from "@/app/lib/records";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -23,10 +23,9 @@ import {
 
 interface BookFormClientProps {
   book: SearchResult;
-  bookId: string;
 }
 
-export default function BookFormClient({ book, bookId }: BookFormClientProps) {
+export default function BookFormClient({ book }: BookFormClientProps) {
   const router = useRouter();
   const [status, setStatus] = useState("");
   const [rating, setRating] = useState("");
@@ -41,14 +40,13 @@ export default function BookFormClient({ book, bookId }: BookFormClientProps) {
 
     try {
       // FormDataオブジェクトを作成
-      const formData = new FormData();
-      formData.append("bookId", bookId);
-      formData.append("status", status);
-      formData.append("rating", rating);
-      formData.append("review", review);
+      const userData = new FormData();
+      userData.append("status", status);
+      userData.append("rating", rating);
+      userData.append("review", review);
 
       // サーバーアクションを呼び出し
-      const result = await saveBookRecord(formData);
+      const result = await saveBookRecord(book, userData);
 
       if (result.success) {
         // 保存成功時はホームページに遷移
@@ -90,7 +88,7 @@ export default function BookFormClient({ book, bookId }: BookFormClientProps) {
             
             <div className="flex-grow">
               <p className="text-sm text-gray-600 mb-2">出版社: {book.publisher}</p>
-              <p className="text-sm text-gray-600 mb-2">発行日: {book.publishedDate}</p>
+              <p className="text-sm text-gray-600 mb-2">発行日: {book.published_date}</p>
               <p className="text-sm text-gray-600 mb-2">価格: {book.price === "-" ? book.price : `${book.price}円`}</p>
             </div>
           </div>

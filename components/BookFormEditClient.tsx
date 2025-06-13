@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { updateBookRecord, deleteBookRecord } from "@/app/actions";
+import { updateBookRecord, deleteBookRecord } from "@/app/lib/records";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,15 +33,14 @@ import {
 } from "@/components/ui/alert-dialog";
 
 interface BookFormEditClientProps {
-  book: RecordedBook;
-  recordId: string;
+  bookRecord: BookRecord;
 }
 
-export default function BookFormEditClient({ book, recordId }: BookFormEditClientProps) {
+export default function BookFormEditClient({ bookRecord }: BookFormEditClientProps) {
   const router = useRouter();
-  const [status, setStatus] = useState(book.status);
-  const [rating, setRating] = useState(book.rating);
-  const [review, setReview] = useState(book.review);
+  const [status, setStatus] = useState(bookRecord.status);
+  const [rating, setRating] = useState(String(bookRecord.rating));
+  const [review, setReview] = useState(bookRecord.review);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -52,14 +51,13 @@ export default function BookFormEditClient({ book, recordId }: BookFormEditClien
 
     try {
       // FormDataオブジェクトを作成
-      const formData = new FormData();
-      formData.append("recordId", recordId);
-      formData.append("status", status);
-      formData.append("rating", rating);
-      formData.append("review", review);
+      const userData = new FormData();
+      userData.append("status", status);
+      userData.append("rating", rating);
+      userData.append("review", review);
 
       // サーバーアクションを呼び出し
-      const result = await updateBookRecord(formData);
+      const result = await updateBookRecord(bookRecord.id, userData);
 
       if (result.success) {
         // 更新成功時はホームページに遷移
@@ -82,12 +80,8 @@ export default function BookFormEditClient({ book, recordId }: BookFormEditClien
     setError(null);
 
     try {
-      // FormDataオブジェクトを作成
-      const formData = new FormData();
-      formData.append("recordId", recordId);
-
       // サーバーアクションを呼び出し
-      const result = await deleteBookRecord(formData);
+      const result = await deleteBookRecord(bookRecord.id);
 
       if (result.success) {
         // 削除成功時はホームページに遷移
@@ -111,16 +105,18 @@ export default function BookFormEditClient({ book, recordId }: BookFormEditClien
       
       <Card>
         <CardHeader>
-          <CardTitle>{book.title}</CardTitle>
-          <CardDescription>著者: {book.authors.join(", ")}</CardDescription>
+          <CardTitle>{bookRecord.title}</CardTitle>
+          <CardDescription>
+            著者: {bookRecord.authors.join(", ")}
+          </CardDescription>
         </CardHeader>
         
         <CardContent>
           <div className="flex flex-col md:flex-row gap-6 mb-6">
             <div className="flex-shrink-0">
               <Image
-                src={book.thumbnail || "/placeholder.svg"}
-                alt={book.title}
+                src={bookRecord.thumbnail || "/placeholder.svg"}
+                alt={bookRecord.title}
                 width={128}
                 height={192}
                 className="object-contain"
@@ -128,9 +124,18 @@ export default function BookFormEditClient({ book, recordId }: BookFormEditClien
             </div>
             
             <div className="flex-grow">
-              <p className="text-sm text-gray-600 mb-2">出版社: {book.publisher}</p>
-              <p className="text-sm text-gray-600 mb-2">発行日: {book.publishedDate}</p>
-              <p className="text-sm text-gray-600 mb-2">価格: {book.price === "-" ? book.price : `${book.price}円`}</p>
+              <p className="text-sm text-gray-600 mb-2">
+                出版社: {bookRecord.publisher}
+              </p>
+              <p className="text-sm text-gray-600 mb-2">
+                発行日: {bookRecord.published_date}
+              </p>
+              <p className="text-sm text-gray-600 mb-2">
+                価格:{" "}
+                {bookRecord.price === "-"
+                  ? bookRecord.price
+                  : `${bookRecord.price}円`}
+              </p>
             </div>
           </div>
           
@@ -176,9 +181,9 @@ export default function BookFormEditClient({ book, recordId }: BookFormEditClien
             </div>
             
             <div className="flex justify-between">
-              <Button 
-                type="submit" 
-                className="w-1/2 mr-2" 
+              <Button
+                type="submit"
+                className="w-1/2 mr-2"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "更新中..." : "更新"}
@@ -186,9 +191,9 @@ export default function BookFormEditClient({ book, recordId }: BookFormEditClien
               
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button 
-                    type="button" 
-                    variant="destructive" 
+                  <Button
+                    type="button"
+                    variant="destructive"
                     className="w-1/2 ml-2"
                     disabled={isSubmitting}
                   >
@@ -204,7 +209,9 @@ export default function BookFormEditClient({ book, recordId }: BookFormEditClien
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>キャンセル</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDelete}>削除</AlertDialogAction>
+                    <AlertDialogAction onClick={handleDelete}>
+                      削除
+                    </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
