@@ -16,11 +16,6 @@ export default async function Home() {
     // サーバーアクションを使用して読書記録を取得
     const bookRecords = await getBookRecords();
     
-    // 読書記録が0件の場合
-    if (bookRecords.length === 0) {
-      return <WelcomePage />;
-    }
-    
     // 読書記録がある場合
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white">

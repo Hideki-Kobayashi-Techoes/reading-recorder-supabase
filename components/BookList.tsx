@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AlertCircle } from "lucide-react";
 
 interface BookListProps {
   books: BookRecord[];
@@ -33,6 +34,19 @@ export default function BookList({ books }: BookListProps) {
     const ratingNum = parseInt(rating, 10);
     return "★".repeat(ratingNum) + "☆".repeat(5 - ratingNum);
   };
+
+  // 読書記録が空の場合のメッセージ表示
+  if (books.length === 0) {
+    return (
+      <div className="bg-blue-50 border border-blue-200 rounded-md p-6 flex items-center justify-center w-full">
+        <div className="flex flex-col items-center text-center">
+          <AlertCircle className="h-12 w-12 text-blue-400 mb-4" />
+          <h3 className="text-lg font-medium text-blue-900 mb-2">読書記録がありません</h3>
+          <p className="text-blue-700">本を追加して、あなたの読書記録を始めましょう。</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
