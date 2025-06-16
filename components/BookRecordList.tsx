@@ -10,11 +10,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { AlertCircle } from "lucide-react";
 
-interface BookListProps {
-  books: BookRecord[];
+interface BookRecordListProps {
+  bookRecords: BookRecord[];
 }
 
-export default function BookList({ books }: BookListProps) {
+export default function BookRecordList({ bookRecords }: BookRecordListProps) {
   // 読書状態に応じたバッジの色を設定
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -36,7 +36,7 @@ export default function BookList({ books }: BookListProps) {
   };
 
   // 読書記録が空の場合のメッセージ表示
-  if (books.length === 0) {
+  if (bookRecords.length === 0) {
     return (
       <div className="bg-blue-50 border border-blue-200 rounded-md p-6 flex items-center justify-center w-full">
         <div className="flex flex-col items-center text-center">
@@ -50,16 +50,12 @@ export default function BookList({ books }: BookListProps) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {books.map((book) => (
+      {bookRecords.map((book) => (
         <Link href={`/record?id=${book.google_book_id}`} key={book.id}>
           <Card className="h-full hover:shadow-lg transition-shadow duration-300">
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg line-clamp-2">
-                {book.title}
-              </CardTitle>
-              <p className="text-sm text-gray-600 line-clamp-1">
-                {book.authors.join(", ")}
-              </p>
+              <CardTitle className="text-lg line-clamp-2">{book.title}</CardTitle>
+              <p className="text-sm text-gray-600 line-clamp-1">{book.authors.join(", ")}</p>
             </CardHeader>
             <CardContent className="flex space-x-4 pb-2">
               <div className="flex-shrink-0">
@@ -72,22 +68,14 @@ export default function BookList({ books }: BookListProps) {
                 />
               </div>
               <div className="flex-grow">
-                <p className="text-sm mb-1 line-clamp-1">
-                  出版社: {book.publisher}
-                </p>
+                <p className="text-sm mb-1 line-clamp-1">出版社: {book.publisher}</p>
                 <p className="text-sm mb-1">発行日: {book.published_date}</p>
-                <Badge className={getStatusColor(book.status)}>
-                  {book.status}
-                </Badge>
-                <p className="text-sm mt-2">
-                  {renderRating(book.rating.toString())}
-                </p>
+                <Badge className={getStatusColor(book.status)}>{book.status}</Badge>
+                <p className="text-sm mt-2">{renderRating(book.rating.toString())}</p>
               </div>
             </CardContent>
             <CardFooter className="pt-0">
-              <p className="text-sm text-gray-700 line-clamp-2">
-                {book.review}
-              </p>
+              <p className="text-sm text-gray-700 line-clamp-2">{book.review}</p>
             </CardFooter>
           </Card>
         </Link>

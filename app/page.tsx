@@ -1,6 +1,6 @@
 import { getBookRecords } from "@/app/lib/records";
 import { getCurrentUser } from "@/app/lib/auth";
-import BookList from "@/components/BookList";
+import BookRecordList from "@/components/BookRecordList";
 import WelcomePage from "@/components/WelcomePage";
 
 export default async function Home() {
@@ -41,7 +41,7 @@ export default async function Home() {
           </div>
           
           {/* 読書記録一覧 */}
-          <BookList books={bookRecords} />
+          <BookRecordList bookRecords={bookRecords} />
         </main>
       </div>
     );
