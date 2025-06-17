@@ -15,7 +15,7 @@ export const signUpAction = async (formData: FormData) => {
     return encodedRedirect(
       "error",
       "/sign-up",
-      "Email and password are required",
+      "メールアドレスとパスワードは必須です",
     );
   }
 
@@ -34,7 +34,7 @@ export const signUpAction = async (formData: FormData) => {
     return encodedRedirect(
       "success",
       "/sign-up",
-      "Thanks for signing up! Please check your email for a verification link.",
+      "会員登録ありがとうございます。メールアドレスに確認用のリンクを送りました。",
     );
   }
 };
@@ -56,6 +56,12 @@ export const signInAction = async (formData: FormData) => {
   return redirect("/");
 };
 
+export const signOutAction = async () => {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  return redirect("/");
+};
+
 export const forgotPasswordAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const supabase = await createClient();
@@ -63,7 +69,7 @@ export const forgotPasswordAction = async (formData: FormData) => {
   const callbackUrl = formData.get("callbackUrl")?.toString();
 
   if (!email) {
-    return encodedRedirect("error", "/forgot-password", "Email is required");
+    return encodedRedirect("error", "/forgot-password", "メールアドレスは必須です");
   }
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -75,7 +81,7 @@ export const forgotPasswordAction = async (formData: FormData) => {
     return encodedRedirect(
       "error",
       "/forgot-password",
-      "Could not reset password",
+      "パスワードの再設定に失敗しました",
     );
   }
 
@@ -86,7 +92,7 @@ export const forgotPasswordAction = async (formData: FormData) => {
   return encodedRedirect(
     "success",
     "/forgot-password",
-    "Check your email for a link to reset your password.",
+    "メールアドレスにパスワード再設定用のリンクを送りました。",
   );
 };
 
@@ -100,7 +106,7 @@ export const resetPasswordAction = async (formData: FormData) => {
     encodedRedirect(
       "error",
       "/reset-password",
-      "Password and confirm password are required",
+      "パスワードとパスワード(確認)は必須です",
     );
   }
 
@@ -108,7 +114,7 @@ export const resetPasswordAction = async (formData: FormData) => {
     encodedRedirect(
       "error",
       "/reset-password",
-      "Passwords do not match",
+      "パスワードとパスワード(確認)が一致しません",
     );
   }
 
@@ -120,15 +126,9 @@ export const resetPasswordAction = async (formData: FormData) => {
     encodedRedirect(
       "error",
       "/reset-password",
-      "Password update failed",
+      "パスワード更新に失敗しました",
     );
   }
 
-  encodedRedirect("success", "/reset-password", "Password updated");
-};
-
-export const signOutAction = async () => {
-  const supabase = await createClient();
-  await supabase.auth.signOut();
-  return redirect("/");
+  encodedRedirect("success", "/reset-password", "パスワードを更新しました");
 };
