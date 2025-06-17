@@ -37,12 +37,14 @@ export default function RootLayout({
         >
           <main className="min-h-screen flex flex-col">
             <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16 sticky top-0 bg-background z-10">
-              <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
-                <div className="flex gap-5 items-center font-semibold">
+              <div className="container flex justify-between items-center px-10 text-sm">
+                <div className="flex gap-5 items-center text-xl font-bold">
                   <Link href={"/"}>Reading Recorder</Link>
                 </div>
                 <div className="flex gap-5 items-center">
-                  <SearchBox />
+                  <div className="w-80">
+                    <SearchBox />
+                  </div>
                   <HeaderAuth />
                 </div>
               </div>

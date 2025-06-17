@@ -35,13 +35,6 @@ export default async function AuthButton() {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="">プロフィール</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="">マイ本棚</Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
         <DropdownMenuItem>
           <form action={signOutAction} className="w-full">
             <Button
