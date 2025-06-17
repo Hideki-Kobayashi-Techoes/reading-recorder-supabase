@@ -14,25 +14,25 @@ export default async function RecordPage({ searchParams }: RecordPageProps) {
   const paramsData = await searchParams;
   const bookId = paramsData.id;
 
+  // 本のIDがない場合はエラー
+  if (!bookId) {
+    throw new Error("本のIDが指定されていません");
+  }
+
+  // Google Book IDで既存の読書記録があるか確認
+  const existingRecord = await getBookRecord(bookId);
+
+  // 既存の記録がある場合は編集モード
+  if (existingRecord) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-8">読書記録の編集</h1>
+        <BookFormEditClient bookRecord={existingRecord} />
+      </div>
+    );
+  }
+
   try {
-    // 本のIDがない場合はエラー
-    if (!bookId) {
-      throw new Error("本のIDが指定されていません");
-    }
-    
-    // Google Book IDで既存の読書記録があるか確認
-    const existingRecord = await getBookRecord(bookId);
-
-    // 既存の記録がある場合は編集モード
-    if (existingRecord) {
-      return (
-        <div className="container mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-8">読書記録の編集</h1>
-          <BookFormEditClient bookRecord={existingRecord} />
-        </div>
-      );
-    }
-
     // 既存の記録がない場合は新規作成モード
     // 本の詳細をGoogle Books APIから取得
     const book = await getBookDetails(bookId);
