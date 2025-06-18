@@ -2,15 +2,13 @@ import SearchResults from "@/components/SearchResults";
 import { searchBooks } from "@/app/lib/google_books";
 
 interface SearchPageProps {
-  searchParams: {
-    q?: string;
-  };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 // メインの検索ページ
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const paramsData = await searchParams;
-  const query = paramsData.q || "";
+  const query = paramsData.q as string;
   
   try {
     const books = await searchBooks(query);

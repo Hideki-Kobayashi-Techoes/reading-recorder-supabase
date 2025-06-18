@@ -4,15 +4,13 @@ import BookFormClient from "@/components/BookFormClient";
 import BookFormEditClient from "@/components/BookFormEditClient";
 
 interface RecordPageProps {
-  searchParams: {
-    id?: string;
-  };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 // 記録ページ（新規作成と編集を統合）
 export default async function RecordPage({ searchParams }: RecordPageProps) {
   const paramsData = await searchParams;
-  const bookId = paramsData.id;
+  const bookId = paramsData.id as string;
 
   // 本のIDがない場合はエラー
   if (!bookId) {
